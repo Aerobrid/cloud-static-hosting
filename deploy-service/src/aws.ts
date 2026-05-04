@@ -88,8 +88,15 @@ export async function uploadDirectoryS3(localDirPath: string, s3Prefix: string) 
     const files = getAllFiles(localDirPath);
     
     const uploadPromises = files.map(async (file) => {
-        // file is an absolute path. Now make it relative to localDirPath
+        // file is an absolute path. make it relative to localDirPath
+        // this is used for the key of the file in s3
+        // Example: if localDirPath = "workspace/output/id/dist" and file = "workspace/output/id/dist/index.css", 
+        // then relativePath = "index.css" and s3Key = "dist/id/index.css"
         const relativePath = path.relative(localDirPath, file).replace(/\\/g, '/');
+        // path.join joins all the arguments to form a path
+        // s3Prefix is "dist/id"
+        // relativePath is "index.css"
+        // so s3Key = "dist/id/index.css"
         const s3Key = `${s3Prefix}/${relativePath}`;
         
         const fileStream = fs.createReadStream(file);
@@ -100,6 +107,7 @@ export async function uploadDirectoryS3(localDirPath: string, s3Prefix: string) 
             Body: fileStream,
         });
 
+        // sends the file to s3
         await s3.send(command);
     });
 
