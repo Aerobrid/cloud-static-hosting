@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express();
 
-app.get("/*", async (req, res) => {
+app.get(/.*/, async (req, res) => {
     // Extract subdomain: id.vercel.com -> id
     const host = req.hostname;
     // We assume the id is the first part of the hostname

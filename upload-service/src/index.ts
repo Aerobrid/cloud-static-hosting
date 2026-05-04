@@ -63,6 +63,19 @@ app.post("/deploy", async (req, res) => {
     }
 });
 
+app.get("/status", async (req, res) => {
+    const id = req.query.id as string;
+    if (!id) {
+        return res.status(400).json({ error: "No ID provided" });
+    }
+    try {
+        const status = await subscriber.hGet("status", id);
+        res.json({ status });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get status" });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Upload service running on port ${PORT}`);
