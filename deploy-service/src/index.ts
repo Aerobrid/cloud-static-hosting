@@ -3,6 +3,7 @@ import { downloadS3Folder, uploadDirectoryS3 } from "./aws";
 import { buildProject } from "./utils";
 import path from "path";
 import dotenv from "dotenv";
+import fs from "fs";
 
 dotenv.config();
 
@@ -33,11 +34,17 @@ async function main() {
                 await buildProject(id);
 
                 console.log(`Uploading built project ${id} to S3...`);
-                const distPath = path.join(__dirname, `../workspace/output/${id}/dist`);
+                const basePath = path.join(__dirname, `../workspace/output/${id}`);
+                const distPath = path.join(basePath, "dist");
+                const buildPath = path.join(basePath, "build");
 
-                // wait + usually react apps build to 'build' or 'dist'
-                // we assume 'dist' based on typical vite/react setups.
-                await uploadDirectoryS3(distPath, `dist/${id}`);
+                // React apps usually build to 'build' (Create React App) or 'dist' (Vite)
+                const finalOutputDir = fs.existsSync(buildPath) ? buildPath : distPath;
+
+                await uploadDirectoryS3(finalOutputDir, `dist/${id}`);
+
+                console.log(`Cleaning up local workspace...`);
+                fs.rmSync(basePath, { recursive: true, force: true });
 
                 console.log(`Finished job: ${id}`);
                 await subscriber.hSet("status", id, "deployed");

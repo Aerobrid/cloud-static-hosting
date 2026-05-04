@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+import fs from "fs";
 import { getAllFiles } from "./files";
 import { uploadFile } from "./aws";
 import { createClient } from "redis";
@@ -49,6 +50,10 @@ app.post("/deploy", async (req, res) => {
 
         // Wait for all uploads to complete
         await Promise.all(uploadPromises);
+
+        // Clean up the local disk!
+        console.log(`Cleaning up local files...`);
+        fs.rmSync(outputDir, { recursive: true, force: true });
 
         // 4. Push job to Redis queue for the Deploy Service to pick up
         console.log(`Pushing job ${id} to Redis...`);
