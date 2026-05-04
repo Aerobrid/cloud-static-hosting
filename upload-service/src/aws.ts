@@ -1,6 +1,9 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 import path from "path";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Initialize S3 client for Cloudflare R2
 const s3 = new S3Client({
@@ -13,12 +16,12 @@ const s3 = new S3Client({
 });
 
 export const uploadFile = async (fileName: string, localFilePath: string) => {
-    const fileContent = fs.readFileSync(localFilePath);
+    const fileStream = fs.createReadStream(localFilePath);
     
     const command = new PutObjectCommand({
         Bucket: process.env.R2_BUCKET_NAME || "vercel-clone",
         Key: fileName,
-        Body: fileContent,
+        Body: fileStream,
     });
 
     try {

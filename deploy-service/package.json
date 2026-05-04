@@ -1,0 +1,23 @@
+{
+  "name": "deploy-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx ts-node-dev src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1041.0",
+    "@types/node": "^25.6.0",
+    "dotenv": "^17.4.2",
+    "redis": "^5.12.1",
+    "simple-git": "^3.36.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  }
+}

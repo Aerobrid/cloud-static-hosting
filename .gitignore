@@ -15,7 +15,6 @@ dist/repos/
 
 # Environment files
 .env
-.env.*
 .env.local
 
 # Vercel/Now
@@ -46,3 +45,6 @@ coverage/
 # Misc temporary files
 tmp/
 *.swp
+
+# Deploy Service Workspace
+workspace/

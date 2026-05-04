@@ -3,6 +3,9 @@ import cors from "cors";
 import path from "path";
 import simpleGit from "simple-git";
 import { generateRandomId } from "./utils";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 import { getAllFiles } from "./files";
 import { uploadFile } from "./aws";
